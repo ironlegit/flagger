@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+  <head>
+    <style>
+      body {
+        background-color: powderblue;
+      }
+      h1 {
+        color: blue;
+      }
+      p {
+        color: red;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Flagger</h1>
+    <h2>Flag Overview</h2>
+    <div id="flags-container"></div>
+  </body>
+  <script>
+    let url = "https://restcountries.com/v3.1/all?fields=cca3,flags";
+    fetch(url)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+      });
+  </script>
+</html>
