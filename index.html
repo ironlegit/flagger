@@ -23,7 +23,12 @@
     fetch(url)
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+        data.forEach((country) => {
+          const img = document.createElement("img");
+          img.src = country.flags.png;
+          img.alt = country.cca3;
+          document.body.appendChild(img);
+        });
       });
   </script>
 </html>
