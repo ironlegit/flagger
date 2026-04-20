@@ -11,6 +11,17 @@
       p {
         color: red;
       }
+      #flags-container {
+        display: grid;
+        grid-template-columns: repeat(16, 1fr);
+        gap: 10px;
+        margin: 20px;
+      }
+      img {
+        width: 100%;
+        height: auto;
+        border: 1px solid #eee;
+      }
     </style>
   </head>
   <body>
@@ -23,11 +34,12 @@
     fetch(url)
       .then((response) => response.json())
       .then((data) => {
+        const container = document.getElementById("flags-container");
         data.forEach((country) => {
           const img = document.createElement("img");
           img.src = country.flags.png;
-          img.alt = country.cca3;
-          document.body.appendChild(img);
+          img.alt = `Flag of ${country.cca3}`;
+          container.appendChild(img);
         });
       });
   </script>
