@@ -28,19 +28,59 @@
     <h1>Flagger</h1>
     <h2>Flag Overview</h2>
     <div id="flags-container"></div>
+    <div id="letters-container"></div>
   </body>
   <script>
     let url = "https://restcountries.com/v3.1/all?fields=cca3,name,flags";
     fetch(url)
       .then((response) => response.json())
       .then((data) => {
+        // Sort countries alphabetically
         data.sort((a, b) => a.name.common.localeCompare(b.name.common));
         const container = document.getElementById("flags-container");
-        data.forEach((country) => {
-          const img = document.createElement("img");
-          img.src = country.flags.png;
-          img.alt = `Flag of ${country.cca3}`;
-          container.appendChild(img);
+
+        const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+        alphabet.forEach((letter) => {
+          // Filter countries starting with current letter
+          const countriesByLetter = data.filter((country) => {
+            // Decompose characters like "Å" into "A" + diacritical mark
+            const firstChar = country.name.common
+              .normalize("NFD")
+              .charAt(0)
+              .toUpperCase();
+            return firstChar === letter;
+          });
+
+          if (countriesByLetter.length > 0) {
+            const letterCard = document.createElement("div");
+
+            // Use same class for letters and flag
+            letterCard.className = "flag-card letter-header";
+            letterCard.textContent = letter;
+            container.appendChild(letterCard);
+
+            countriesByLetter.forEach((country) => {
+              // Create a container for each flag + name
+              const flagCard = document.createElement("div");
+              flagCard.className = "flag-card"; // For styling
+
+              // Create the flag image
+              const img = document.createElement("img");
+              img.src = country.flags.png;
+              img.alt = `Flag of ${country.name.common}`;
+
+              // Create the country name
+              const name = document.createElement("p");
+              name.textContent = country.name.common;
+
+              // Append both to the card
+              flagCard.appendChild(img);
+              flagCard.appendChild(name);
+
+              // Append the card to the main container
+              container.appendChild(flagCard);
+            });
+          }
         });
       });
   </script>
