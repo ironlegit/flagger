@@ -3,24 +3,56 @@
   <head>
     <style>
       body {
-        background-color: powderblue;
-      }
-      h1 {
-        color: blue;
-      }
-      p {
-        color: red;
+        font-family: "Arial", sans-serif;
+        background-color: #0f0c29;
+        color: #fff;
+        margin: 0;
+        padding: 20px;
       }
       #flags-container {
         display: grid;
         grid-template-columns: repeat(16, 1fr);
-        gap: 10px;
-        margin: 20px;
+        gap: 15px;
+        max-width: 1200px;
+        margin: 0 auto;
       }
-      img {
+
+      .flag-card {
+        background: rgba(20, 20, 40, 0.8);
+        border-radius: 8px;
+        padding: 10px;
+        transition: all 0.2s;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        border: 1px solid rgba(100, 100, 200, 0.3);
+      }
+
+      .flag-card:hover {
+        box-shadow: 0 0 10px rgba(100, 100, 255, 0.5);
+        border-color: rgba(100, 100, 255, 0.7);
+      }
+
+      .flag-card img {
         width: 100%;
         height: auto;
-        border: 1px solid #eee;
+        border-radius: 4px;
+        margin-bottom: 8px;
+      }
+
+      .flag-card p {
+        margin: 0;
+        font-size: 12px;
+        text-align: center;
+      }
+
+      .letter-header {
+        background: rgba(100, 100, 200, 0.5);
+        font-size: 40px;
+        font-weight: bold;
+        border-radius: 8px;
+        padding: 10px;
+        text-shadow: 0 0 5px rgba(0, 100, 255, 0.7);
       }
     </style>
   </head>
