@@ -9,6 +9,7 @@
         margin: 0;
         padding: 20px;
       }
+
       #flags-container {
         display: grid;
         grid-template-columns: repeat(16, 1fr);
@@ -58,6 +59,10 @@
   </head>
   <body>
     <h1>Flagger</h1>
+    <div id="controls">
+      <button id="toggle-names">Hide Names</button>
+    </div>
+
     <h2>Flag Overview</h2>
     <div id="flags-container"></div>
     <div id="letters-container"></div>
@@ -113,6 +118,16 @@
               container.appendChild(flagCard);
             });
           }
+        });
+        const toggleButton = document.getElementById("toggle-names");
+        const names = document.querySelectorAll(".flag-card p"); // Selects all <p> elements inside flag cards
+
+        toggleButton.addEventListener("click", () => {
+          const isHidden = names[0].style.display === "none";
+          names.forEach((name) => {
+            name.style.display = isHidden ? "block" : "none";
+          });
+          toggleButton.textContent = isHidden ? "Hide Names" : "Show Names";
         });
       });
   </script>
