@@ -70,7 +70,7 @@
     <div id="letters-container"></div>
   </body>
   <script>
-    let url = "https://restcountries.com/v3.1/all?fields=cca3,name,flags";
+    let url = "https://restcountries.com/v4/all?fields=cca2,name,flag";
     fetch(url)
       .then((response) => response.json())
       .then((data) => {
@@ -105,8 +105,8 @@
 
               // Create the flag image
               const img = document.createElement("img");
-              img.src = country.flags.png;
-              img.alt = `Flag of ${country.name.common}`;
+              img.src = country.flag.png;
+              img.alt = country.cca2;
 
               // Create the country name
               const name = document.createElement("p");
