@@ -121,16 +121,21 @@
             });
           }
         });
-        const toggleButton = document.getElementById("toggle-names");
-        const names = document.querySelectorAll(".flag-card p"); // Selects all <p> elements inside flag cards
+      })
+      .catch((error) => console.error("Error:", error));
 
-        toggleButton.addEventListener("click", () => {
-          const isHidden = names[0].style.display === "none";
-          names.forEach((name) => {
-            name.style.display = isHidden ? "block" : "none";
-          });
-          toggleButton.textContent = isHidden ? "Hide Names" : "Show Names";
+    // Toggle Button Logic
+    // Toggle names button
+    const toggleNamesButton = document.getElementById("toggle-names");
+    if (toggleNamesButton) {
+      toggleNamesButton.addEventListener("click", () => {
+        const names = document.querySelectorAll(".flag-card p");
+        const isHidden = names[0].style.display === "none";
+        names.forEach((name) => {
+          name.style.display = isHidden ? "block" : "none";
         });
+        toggleNamesButton.textContent = isHidden ? "Hide Names" : "Show Names";
       });
+    }
   </script>
 </html>
