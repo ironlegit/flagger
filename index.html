@@ -57,6 +57,49 @@
         font-weight: bold;
         text-shadow: 0 0 5px rgba(0, 100, 255, 0.7);
       }
+
+      /* Overview mode styles */
+      .overview-mode #flags-container {
+        grid-template-columns: repeat(
+          auto-fill,
+          minmax(80px, 1fr)
+        ); /* More columns */
+        gap: 8px; /* Smaller gaps */
+      }
+
+      .overview-mode .flag-card {
+        height: 80px; /* Smaller height */
+        padding: 4px; /* Less padding */
+      }
+
+      .overview-mode .flag-card p {
+        display: none; /* Hide names */
+      }
+
+      .overview-mode .flag-card img {
+        max-height: 60px; /* Smaller flags */
+        margin-bottom: 0; /* Remove margin */
+      }
+
+      .overview-mode .letter-header {
+        height: 80px; /* Match card height */
+        font-size: 24px; /* Smaller font */
+      }
+
+      /* Style for the toggle button */
+      #toggle-mode {
+        padding: 8px 16px;
+        background: #4285f4;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-bottom: 20px;
+      }
+
+      #toggle-mode:hover {
+        background: #3367d6;
+      }
     </style>
   </head>
   <body>
@@ -135,6 +178,21 @@
           name.style.display = isHidden ? "block" : "none";
         });
         toggleNamesButton.textContent = isHidden ? "Hide Names" : "Show Names";
+      });
+    }
+
+    // Toggle mode button
+    const toggleModeButton = document.getElementById("toggle-mode");
+    if (toggleModeButton) {
+      toggleModeButton.addEventListener("click", () => {
+        const isOverviewMode = toggleModeButton.textContent === "Detail Mode";
+        if (isOverviewMode) {
+          toggleModeButton.textContent = "Overview Mode";
+          document.body.classList.remove("overview-mode");
+        } else {
+          toggleModeButton.textContent = "Detail Mode";
+          document.body.classList.add("overview-mode");
+        }
       });
     }
   </script>
