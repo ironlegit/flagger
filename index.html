@@ -153,6 +153,15 @@
               const flagCard = document.createElement("div");
               flagCard.className = "flag-card"; // For styling
 
+              // TODO: Create descriptors
+              // TODO: Create descriptors
+              // TODO: Create descriptors
+              // TODO: Create descriptors
+              // TODO: Create descriptors
+              // const desc = country.flag.alt;
+              // const keywords = descriptors.toLowerCase().split(/[^a-zA-Z'-]+/);
+              // console.log(keywords);
+
               // Create the flag image
               const img = document.createElement("img");
               img.src = country.flag.png;
@@ -174,13 +183,14 @@
       })
       .catch((error) => console.error("Error:", error));
 
-    // Toggle Button Logic
     // Toggle names button
     const toggleNamesButton = document.getElementById("toggle-names");
     if (toggleNamesButton) {
       toggleNamesButton.addEventListener("click", () => {
+        // Find all <p> elements inside the flag-card class
         const names = document.querySelectorAll(".flag-card p");
         const isHidden = names[0].style.display === "none";
+        // Set <p> to block (visible) or none (hidden)
         names.forEach((name) => {
           name.style.display = isHidden ? "block" : "none";
         });
@@ -192,7 +202,9 @@
     const toggleModeButton = document.getElementById("toggle-mode");
     if (toggleModeButton) {
       toggleModeButton.addEventListener("click", () => {
+        // Check current status of button
         const isOverviewMode = toggleModeButton.textContent === "Detail Mode";
+        // Depending on mode decide which style to use in body
         if (isOverviewMode) {
           toggleModeButton.textContent = "Overview Mode";
           document.body.classList.remove("overview-mode");
