@@ -87,9 +87,10 @@
         font-size: 24px; /* Smaller font */
       }
 
-      /* Style for the toggle button */
+      /* Style for the toggle button and search-bar */
       #toggle-mode,
-      #toggle-names {
+      #toggle-names,
+      #search-bar {
         padding: 8px 16px;
         background: #4285f4;
         color: white;
@@ -103,6 +104,10 @@
       #toggle-names:hover {
         background: #3367d6;
       }
+
+      ::placeholder {
+        color: white;
+      }
     </style>
   </head>
   <body>
@@ -111,6 +116,12 @@
       <h4>Filters</h4>
       <button id="toggle-names">Hide Names</button>
       <button id="toggle-mode">Overview Mode</button>
+      <input
+        id="search-bar"
+        type="text"
+        id="search"
+        placeholder="Seach by keyword..."
+      />
     </div>
 
     <div id="flags-container"></div>
@@ -118,66 +129,98 @@
   </body>
   <script>
     let url = "https://restcountries.com/v4/all?fields=cca2,name,flag";
+    let allCountries = [];
+
     fetch(url)
       .then((response) => response.json())
       .then((data) => {
-        // Sort countries alphabetically
-        data.sort((a, b) => a.name.common.localeCompare(b.name.common));
-        const container = document.getElementById("flags-container");
-
-        const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-        alphabet.forEach((letter) => {
-          // Filter countries starting with current letter
-          const countriesByLetter = data.filter((country) => {
-            const firstChar = country.name.common
-              .normalize("NFD") // Decompose characters like "Å" into "A" + diacritical mark
-              .charAt(0)
-              .toUpperCase();
-            return firstChar === letter;
-          });
-
-          if (countriesByLetter.length > 0) {
-            const letterCard = document.createElement("div");
-
-            // Use same class for letters and flag
-            letterCard.className = "flag-card letter-header";
-            letterCard.textContent = letter;
-            container.appendChild(letterCard);
-
-            countriesByLetter.forEach((country) => {
-              // Create a container for each flag + name
-              const flagCard = document.createElement("div");
-              flagCard.className = "flag-card"; // For styling
-
-              // TODO: Create descriptors
-              // TODO: Create descriptors
-              // TODO: Create descriptors
-              // TODO: Create descriptors
-              // TODO: Create descriptors
-              // const desc = country.flag.alt;
-              // const keywords = descriptors.toLowerCase().split(/[^a-zA-Z'-]+/);
-              // console.log(keywords);
-
-              // Create the flag image
-              const img = document.createElement("img");
-              img.src = country.flag.png;
-              img.alt = country.cca2;
-
-              // Create the country name
-              const name = document.createElement("p");
-              name.textContent = country.name.common;
-
-              // Append both to the card
-              flagCard.appendChild(img);
-              flagCard.appendChild(name);
-
-              // Append the card to the main container
-              container.appendChild(flagCard);
-            });
-          }
+        data.forEach((country) => {
+          const desc = country.flag.alt;
+          const keywords = desc.toLowerCase().split(/[^a-zA-Z'-]+/);
+          country.keywords = keywords;
         });
+
+        allCountries = data;
+        renderFlags(allCountries);
       })
       .catch((error) => console.error("Error:", error));
+
+    function renderFlags(countries) {
+      const container = document.getElementById("flags-container");
+      container.innerHTML = "";
+
+      // Sort countries alphabetically
+      countries.sort((a, b) => a.name.common.localeCompare(b.name.common));
+
+      const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+      alphabet.forEach((letter) => {
+        // Filter countries starting with current letter
+        const countriesByLetter = countries.filter((country) => {
+          const firstChar = country.name.common
+            .normalize("NFD") // Decompose characters like "Å" into "A" + diacritical mark
+            .charAt(0)
+            .toUpperCase();
+          return firstChar === letter;
+        });
+
+        if (countriesByLetter.length > 0) {
+          const letterCard = document.createElement("div");
+
+          // Use same class for letters and flag
+          letterCard.className = "flag-card letter-header";
+          letterCard.textContent = letter;
+          container.appendChild(letterCard);
+
+          countriesByLetter.forEach((country) => {
+            // Create a container for each flag + name
+            const flagCard = document.createElement("div");
+            flagCard.className = "flag-card"; // For styling
+
+            // Create the flag image
+            const img = document.createElement("img");
+            img.src = country.flag.png;
+            img.alt = country.cca2;
+
+            // Create the country name
+            const name = document.createElement("p");
+            name.textContent = country.name.common;
+
+            // Append both to the card
+            flagCard.appendChild(img);
+            flagCard.appendChild(name);
+
+            // Append the card to the main container
+            container.appendChild(flagCard);
+          });
+        }
+      });
+    }
+    // Search function
+    function filterCountries(searchTerm) {
+      const fullTerm = searchTerm.toLowerCase().trim();
+
+      if (!fullTerm) return allCountries;
+
+      // Split search term by comma or space
+      const searchTerms = fullTerm
+        .split(/[,\s]+/)
+        .filter((token) => token.length > 0);
+
+      return allCountries.filter((country) => {
+        return searchTerms.every(
+          (term) =>
+            country.keywords.includes(term) ||
+            country.name.common.toLowerCase().includes(term),
+        );
+      });
+    }
+
+    // Add event listener for the existing search input
+    const searchInput = document.getElementById("search-bar");
+    searchInput.addEventListener("input", () => {
+      const filteredData = filterCountries(searchInput.value.trim());
+      renderFlags(filteredData);
+    });
 
     // Toggle names button
     const toggleNamesButton = document.getElementById("toggle-names");
