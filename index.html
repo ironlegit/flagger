@@ -1,257 +1,27 @@
 <!doctype html>
 <html>
   <head>
-    <style>
-      .header {
-        text-align: center;
-        color: white;
-        font-size: 30px;
-      }
-      body {
-        font-family: "Arial", sans-serif;
-        background-color: #0f0c29;
-        color: #fff;
-        margin: 0;
-        padding: 20px;
-      }
-
-      #flags-container {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-        gap: 15px;
-        max-width: 1200px;
-        margin: 0 auto;
-      }
-
-      .flag-card,
-      .letter-header {
-        height: 120px;
-        min-height: 0;
-        background: rgba(20, 20, 40, 0.8);
-        border-radius: 8px;
-        padding: 10px;
-        transition: all 0.2s;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        border: 1px solid rgba(100, 100, 200, 0.3);
-      }
-
-      .flag-card:hover {
-        transform: translateY(-5px);
-        background: rgba(40, 40, 80, 0.8);
-      }
-
-      .flag-card img {
-        width: 100%;
-        height: auto;
-        border-radius: 4px;
-        margin-bottom: 8px;
-      }
-
-      .flag-card p {
-        margin: 0;
-        font-size: 12px;
-        text-align: center;
-      }
-
-      .letter-header {
-        background: rgba(40, 40, 60, 0.8);
-        font-size: 40px;
-        font-weight: bold;
-        text-shadow: 0 0 5px rgba(100, 100, 255, 0.7);
-      }
-
-      /* Overview mode styles */
-      .overview-mode #flags-container {
-        grid-template-columns: repeat(
-          auto-fill,
-          minmax(80px, 1fr)
-        ); /* More columns */
-        gap: 8px; /* Smaller gaps */
-      }
-
-      .overview-mode .flag-card {
-        height: 80px; /* Smaller height */
-        padding: 4px; /* Less padding */
-      }
-
-      .overview-mode .flag-card img {
-        max-height: 60px; /* Smaller flags */
-        margin-bottom: 0; /* Remove margin */
-      }
-
-      .overview-mode .letter-header {
-        height: 80px; /* Match card height */
-        font-size: 24px; /* Smaller font */
-      }
-
-      /* Style for the toggle button and search-bar */
-      #toggle-mode,
-      #toggle-names,
-      #search-bar {
-        padding: 8px 16px;
-        background: #4285f4;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        margin-bottom: 20px;
-      }
-
-      #toggle-mode:hover,
-      #toggle-names:hover {
-        background: #3367d6;
-      }
-
-      ::placeholder {
-        color: white;
-      }
-    </style>
+    <title>Flagger - Flag Explorer</title>
+    <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
     <div class="header">
-      <h1>Flagger</h1>
-      <h4>Filters</h4>
+      <h1 class="flag-header" id="cyber-header" data-text="Flagger"></h1>
+      <p class="flag-sub">// Flag Explorer</p>
+    </div>
+    <div class="filters">
+      <span class="filter-label">Filters</span>
       <button id="toggle-names">Hide Names</button>
       <button id="toggle-mode">Overview Mode</button>
       <input
         id="search-bar"
         type="text"
         id="search"
-        placeholder="Seach by keyword..."
+        placeholder="Filter by keyword..."
       />
     </div>
-
     <div id="flags-container"></div>
     <div id="letters-container"></div>
+    <script src="js/script.js"></script>
   </body>
-  <script>
-    let url = "https://restcountries.com/v4/all?fields=cca2,name,flag";
-    let allCountries = [];
-
-    fetch(url)
-      .then((response) => response.json())
-      .then((data) => {
-        data.forEach((country) => {
-          const desc = country.flag.alt;
-          const keywords = desc.toLowerCase().split(/[^a-zA-Z'-]+/);
-          country.keywords = keywords;
-        });
-
-        allCountries = data;
-        renderFlags(allCountries);
-      })
-      .catch((error) => console.error("Error:", error));
-
-    function renderFlags(countries) {
-      const container = document.getElementById("flags-container");
-      container.innerHTML = "";
-
-      // Sort countries alphabetically
-      countries.sort((a, b) => a.name.common.localeCompare(b.name.common));
-
-      const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-      alphabet.forEach((letter) => {
-        // Filter countries starting with current letter
-        const countriesByLetter = countries.filter((country) => {
-          const firstChar = country.name.common
-            .normalize("NFD") // Decompose characters like "Å" into "A" + diacritical mark
-            .charAt(0)
-            .toUpperCase();
-          return firstChar === letter;
-        });
-
-        if (countriesByLetter.length > 0) {
-          const letterCard = document.createElement("div");
-
-          // Use same class for letters and flag
-          letterCard.className = "flag-card letter-header";
-          letterCard.textContent = letter;
-          container.appendChild(letterCard);
-
-          countriesByLetter.forEach((country) => {
-            // Create a container for each flag + name
-            const flagCard = document.createElement("div");
-            flagCard.className = "flag-card"; // For styling
-
-            // Create the flag image
-            const img = document.createElement("img");
-            img.src = country.flag.png;
-            img.alt = country.cca2;
-
-            // Create the country name
-            const name = document.createElement("p");
-            name.textContent = country.name.common;
-
-            // Append both to the card
-            flagCard.appendChild(img);
-            flagCard.appendChild(name);
-
-            // Append the card to the main container
-            container.appendChild(flagCard);
-          });
-        }
-      });
-    }
-    // Search function
-    function filterCountries(searchTerm) {
-      const fullTerm = searchTerm.toLowerCase().trim();
-
-      if (!fullTerm) return allCountries;
-
-      // Split search term by comma or space
-      const searchTerms = fullTerm
-        .split(/[,\s]+/)
-        .filter((token) => token.length > 0);
-
-      return allCountries.filter((country) => {
-        return searchTerms.every(
-          (term) =>
-            country.keywords.includes(term) ||
-            country.name.common.toLowerCase().includes(term),
-        );
-      });
-    }
-
-    // Add event listener for the existing search input
-    const searchInput = document.getElementById("search-bar");
-    searchInput.addEventListener("input", () => {
-      const filteredData = filterCountries(searchInput.value.trim());
-      renderFlags(filteredData);
-    });
-
-    // Toggle names button
-    const toggleNamesButton = document.getElementById("toggle-names");
-    if (toggleNamesButton) {
-      toggleNamesButton.addEventListener("click", () => {
-        // Find all <p> elements inside the flag-card class
-        const names = document.querySelectorAll(".flag-card p");
-        const isHidden = names[0].style.display === "none";
-        // Set <p> to block (visible) or none (hidden)
-        names.forEach((name) => {
-          name.style.display = isHidden ? "block" : "none";
-        });
-        toggleNamesButton.textContent = isHidden ? "Hide Names" : "Show Names";
-      });
-    }
-
-    // Toggle mode button
-    const toggleModeButton = document.getElementById("toggle-mode");
-    if (toggleModeButton) {
-      toggleModeButton.addEventListener("click", () => {
-        // Check current status of button
-        const isOverviewMode = toggleModeButton.textContent === "Detail Mode";
-        // Depending on mode decide which style to use in body
-        if (isOverviewMode) {
-          toggleModeButton.textContent = "Overview Mode";
-          document.body.classList.remove("overview-mode");
-        } else {
-          toggleModeButton.textContent = "Detail Mode";
-          document.body.classList.add("overview-mode");
-        }
-      });
-    }
-  </script>
 </html>
