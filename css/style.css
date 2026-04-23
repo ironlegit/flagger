@@ -109,6 +109,7 @@ body {
 
 .flag-card p {
   margin: 0;
+  font-family: "Share Tech Mono", monospace;
   font-size: 12px;
   text-align: center;
 }
