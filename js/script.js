@@ -1,6 +1,6 @@
 // Setup via reverse proxy
 let url =
-  "/api/v5/all?response_fields=?response_fields=codes.alpha_2,name.common,flag.url_png";
+  "/api/v5/all?response_fields=?response_fields=codes.alpha_2,name.common,flag.url_png,flag.description";
 
 let allCountries = [];
 
@@ -8,15 +8,15 @@ fetch(url)
   .then((response) => response.json())
   .then((data) => {
     data.forEach((country) => {
-      const desc = country.flag.alt;
+      const desc = country.flag.description;
       const keywords = desc.toLowerCase().split(/[^a-zA-Z'-]+/);
       country.keywords = keywords;
     });
 
     allCountries = data;
     renderFlags(allCountries);
-  });
-//.catch((error) => console.error("Error:", error));
+  })
+  .catch((error) => console.error("Error:", error));
 
 function renderFlags(countries) {
   const container = document.getElementById("flags-container");
