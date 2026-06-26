@@ -1,5 +1,6 @@
 // Setup via reverse proxy
-let url = "/api/v5/all?fields=cca2,name,flag";
+let url =
+  "/api/v5/all?response_fields=?response_fields=codes.alpha_2,name.common,flag.url_png";
 
 let allCountries = [];
 
