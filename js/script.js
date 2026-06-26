@@ -1,4 +1,6 @@
+// Setup via reverse proxy
 let url = "/api/v5/all?fields=cca2,name,flag";
+
 let allCountries = [];
 
 fetch(url)
@@ -12,8 +14,8 @@ fetch(url)
 
     allCountries = data;
     renderFlags(allCountries);
-  })
-  .catch((error) => console.error("Error:", error));
+  });
+//.catch((error) => console.error("Error:", error));
 
 function renderFlags(countries) {
   const container = document.getElementById("flags-container");
