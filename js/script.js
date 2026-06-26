@@ -1,4 +1,4 @@
-let url = "/api/v4/all?fields=cca2,name,flag";
+let url = "/api/v5/all?fields=cca2,name,flag";
 let allCountries = [];
 
 fetch(url)
