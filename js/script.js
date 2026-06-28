@@ -12,13 +12,15 @@ fetch(url)
     return response.json();
   })
   .then((data) => {
-    data.forEach((country) => {
+    const { objects } = data.data;
+
+    objects.forEach((country) => {
       const desc = country.flag.description;
-      const keywords = desc.toLowerCase().split(/[^a-zA-Z'-]+/);
-      country.keywords = keywords;
+      country.keywords = desc.toLowerCase().split(/[^a-zA-Z'-]+/);
     });
 
-    allCountries = data;
+    allCountries = objects;
+    console.log(allCountries);
     renderFlags(allCountries);
   })
   .catch((error) => console.error("Error:", error));
