@@ -1,0 +1,11 @@
+services:
+  flagger-dev:
+    image: nginx:alpine
+    container_name: flagger-dev
+    ports:
+      - "8080:80"
+    environment:
+      - REST_COUNTRIES_API_KEY=${REST_COUNTRIES_API_KEY}
+    volumes:
+      - .:/usr/share/nginx/html:ro
+      - ./nginx.conf.template:/etc/nginx/templates/default.conf.template:ro
