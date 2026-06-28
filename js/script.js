@@ -1,6 +1,6 @@
 // Setup via reverse proxy
 let url =
-  "/api/v5?response_fields=codes.alpha_2,name.common,flag.url_png,flag.description";
+  "/api/v5?response_fields=codes.alpha_2,names.common,flag.url_png,flag.description";
 
 let allCountries = [];
 
@@ -30,13 +30,13 @@ function renderFlags(countries) {
   container.innerHTML = "";
 
   // Sort countries alphabetically
-  countries.sort((a, b) => a.name.common.localeCompare(b.name.common));
+  countries.sort((a, b) => a.names.common.localeCompare(b.names.common));
 
   const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
   alphabet.forEach((letter) => {
     // Filter countries starting with current letter
     const countriesByLetter = countries.filter((country) => {
-      const firstChar = country.name.common
+      const firstChar = country.names.common
         .normalize("NFD") // Decompose characters like "Å" into "A" + diacritical mark
         .charAt(0)
         .toUpperCase();
@@ -58,12 +58,12 @@ function renderFlags(countries) {
 
         // Create the flag image
         const img = document.createElement("img");
-        img.src = country.flag.png;
+        img.src = country.flag.url_png;
         img.alt = country.cca2;
 
         // Create the country name
         const name = document.createElement("p");
-        name.textContent = country.name.common;
+        name.textContent = country.names.common;
 
         // Append both to the card
         flagCard.appendChild(img);
