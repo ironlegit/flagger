@@ -5,7 +5,12 @@ let url =
 let allCountries = [];
 
 fetch(url)
-  .then((response) => response.json())
+  .then((response) => {
+    if (!response.ok) {
+      throw new Error(`HTTP error: ${response.status}`);
+    }
+    return response.json();
+  })
   .then((data) => {
     data.forEach((country) => {
       const desc = country.flag.description;
