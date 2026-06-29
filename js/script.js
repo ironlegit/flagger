@@ -1,6 +1,6 @@
 // Setup via reverse proxy
 let url =
-  "/api/v5?response_fields=codes.alpha_2,names.common,flag.url_png,flag.description";
+  "/api/v5?limit=100&response_fields=codes.alpha_2,names.common,flag.url_png,flag.description";
 
 let allCountries = [];
 
