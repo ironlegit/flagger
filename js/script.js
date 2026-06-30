@@ -58,6 +58,7 @@ function renderFlags(countries) {
 
         // Create the flag image
         const img = document.createElement("img");
+        // TODO: Handle empty url_png
         img.src = country.flag.url_png;
         img.alt = country.cca2;
 
