@@ -76,6 +76,7 @@ function renderFlags(countries) {
     }
   });
 }
+
 // Search function
 function filterCountries(searchTerm) {
   const fullTerm = searchTerm.toLowerCase().trim();
@@ -91,7 +92,7 @@ function filterCountries(searchTerm) {
     return searchTerms.every(
       (term) =>
         country.keywords.includes(term) ||
-        country.name.common.toLowerCase().includes(term),
+        country.names.common.toLowerCase().includes(term),
     );
   });
 }
