@@ -20,7 +20,6 @@ fetch(url)
     });
 
     allCountries = objects;
-    console.log(allCountries);
     renderFlags(allCountries);
   })
   .catch((error) => console.error("Error:", error));
