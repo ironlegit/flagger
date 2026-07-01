@@ -2,7 +2,7 @@
 const api_base = "/api"; // proxied
 const api_version = "v5";
 const searchParams = new URLSearchParams();
-searchParams.append("limit", 100);
+searchParams.append("limit", 300);
 searchParams.append("response_fields", "codes.alpha_2");
 searchParams.append("response_fields", "names.common");
 searchParams.append("response_fields", "flag.url_png");
