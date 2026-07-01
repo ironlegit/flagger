@@ -1,7 +1,15 @@
-// Setup via reverse proxy
-let url =
-  "/api/v5?limit=100&response_fields=codes.alpha_2,names.common,flag.url_png,flag.description";
+// API url construction
+const api_base = "/api"; // proxied
+const api_version = "v5";
+const searchParams = new URLSearchParams();
+searchParams.append("limit", 100);
+searchParams.append("response_fields", "codes.alpha_2");
+searchParams.append("response_fields", "names.common");
+searchParams.append("response_fields", "flag.url_png");
+searchParams.append("response_fields", "flag.description");
+const url = `${api_base}/${api_version}?${searchParams.toString()}`;
 
+// Get data
 let allCountries = [];
 
 fetch(url)
