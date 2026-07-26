@@ -95,11 +95,15 @@ function filterCountries(searchTerm) {
     .split(/[,\s]+/)
     .filter((token) => token.length > 0);
 
+  // Create new filtered array from allCountries
   return allCountries.filter((country) => {
+    // For each country check searchTerms in keywords or common names
     return searchTerms.every(
       (term) =>
-        country.keywords.includes(term) ||
-        country.names.common.toLowerCase().includes(term),
+        // Simple fuzzy search
+        country.keywords.some((keyword) =>
+          keyword.toLowerCase().includes(term),
+        ) || country.names.common.toLowerCase().includes(term),
     );
   });
 }
