@@ -6,7 +6,6 @@ const searchParams = new URLSearchParams();
 const isDev =
   window.location.hostname === "localhost" ||
   window.location.hostname === "127.0.0.1";
-console.log(isDev);
 const limit = isDev ? 25 : 300;
 searchParams.append("limit", limit);
 searchParams.append("response_fields", "codes.alpha_2");
