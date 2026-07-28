@@ -70,9 +70,13 @@ function renderFlags(countries) {
 
         // Create the flag image
         const img = document.createElement("img");
-        // TODO: Handle empty url_png
-        img.src = country.flag.url_png;
-        img.alt = country.cca2;
+        if (country.flag.url_png && country.flag.url_png !== "") {
+          img.src = country.flag.url_png;
+          img.alt = country.cca2;
+        } else {
+          img.src = "assets/placeholder_flag.png";
+          img.alt = `Flag not found for ${country.names.common}`;
+        }
 
         // Create the country name
         const name = document.createElement("p");
