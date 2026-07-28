@@ -2,17 +2,23 @@
 const api_base = "/api"; // proxied
 const api_version = "v5";
 const searchParams = new URLSearchParams();
+
 // Basic DEV switch
 const isDev =
   window.location.hostname === "localhost" ||
   window.location.hostname === "127.0.0.1";
 const limit = isDev ? 25 : 300;
+
+// Field selection
 searchParams.append("limit", limit);
 searchParams.append("response_fields", "codes.alpha_2");
 searchParams.append("response_fields", "names.common");
 searchParams.append("response_fields", "flag.url_png");
 searchParams.append("response_fields", "flag.description");
 const url = `${api_base}/${api_version}?${searchParams.toString()}`;
+
+// Filters
+let activeLetter = null;
 
 // Get data
 let allCountries = [];
@@ -45,6 +51,7 @@ function renderFlags(countries) {
   countries.sort((a, b) => a.names.common.localeCompare(b.names.common));
 
   const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+
   alphabet.forEach((letter) => {
     // Filter countries starting with current letter
     const countriesByLetter = countries.filter((country) => {
@@ -61,12 +68,33 @@ function renderFlags(countries) {
       // Use same class for letters and flag
       letterCard.className = "flag-card letter-header";
       letterCard.textContent = letter;
+
+      // Add click handler to toggle the letter filter
+      letterCard.addEventListener("click", () => {
+        // Toggle: if the same letter is clicked again, clear the filter
+        activeLetter = activeLetter === letter ? null : letter;
+        const filteredData = filterCountries(
+          searchInput.value.trim(),
+          activeLetter,
+        );
+        renderFlags(filteredData);
+      });
+
+      // Highlight the active letter
+      if (activeLetter === letter) {
+        letterCard.style.fontWeight = "italic";
+      }
+
       container.appendChild(letterCard);
 
       countriesByLetter.forEach((country) => {
         // Create a container for each flag + name
         const flagCard = document.createElement("div");
         flagCard.className = "flag-card"; // For styling
+
+        if (country.names.common === "Argentina") {
+          console.log("Argentina Desc:\n" + country.flag.description);
+        }
 
         // Create the flag image
         const img = document.createElement("img");
@@ -94,33 +122,51 @@ function renderFlags(countries) {
 }
 
 // Search function
-function filterCountries(searchTerm) {
-  const fullTerm = searchTerm.toLowerCase().trim();
+function filterCountries(searchTerm, letter = null) {
+  let filteredCountries = allCountries;
 
-  if (!fullTerm) return allCountries;
+  // Apply letter filter first
+  if (letter) {
+    filteredCountries = filteredCountries.filter((country) => {
+      const firstChar = country.names.common
+        .normalize("NFD")
+        .charAt(0)
+        .toUpperCase();
+      return firstChar === letter;
+    });
+  }
+  console.log("active letter: " + letter);
+  // Apply search term filter
+  if (searchTerm) {
+    // Prepare and split search terms by comma or space
+    const searchTerms = searchTerm
+      .toLowerCase()
+      .trim()
+      .split(/[,\s]+/)
+      .filter((token) => token.length > 0);
 
-  // Split search term by comma or space
-  const searchTerms = fullTerm
-    .split(/[,\s]+/)
-    .filter((token) => token.length > 0);
+    console.log("search terms: " + searchTerms);
 
-  // Create new filtered array from allCountries
-  return allCountries.filter((country) => {
-    // For each country check searchTerms in keywords or common names
-    return searchTerms.every(
-      (term) =>
-        // Simple fuzzy search
-        country.keywords.some((keyword) =>
-          keyword.toLowerCase().includes(term),
-        ) || country.names.common.toLowerCase().includes(term),
-    );
-  });
+    // Create new filtered array from allCountries
+    filteredCountries = filteredCountries.filter((country) => {
+      // For each country check searchTerms in keywords or common names
+      return searchTerms.every(
+        (term) =>
+          // Simple fuzzy search
+          country.keywords.some((keyword) =>
+            keyword.toLowerCase().startsWith(term),
+          ) || country.names.common.toLowerCase().startsWith(term),
+      );
+    });
+  }
+
+  return filteredCountries;
 }
 
 // Add event listener for the existing search input
 const searchInput = document.getElementById("search-bar");
 searchInput.addEventListener("input", () => {
-  const filteredData = filterCountries(searchInput.value.trim());
+  const filteredData = filterCountries(searchInput.value.trim(), activeLetter);
   renderFlags(filteredData);
 });
 
