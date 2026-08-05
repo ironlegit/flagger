@@ -19,7 +19,7 @@ body {
   position: relative;
 }
 
-/* Wave animation */
+/* ===== Wave animation ===== */
 @keyframes flagwave {
   0%,
   100% {
@@ -37,6 +37,7 @@ body {
   background-clip: text;
 }
 
+/* ===== Flag Section ===== */
 .flag-sub {
   font-family: "Share Tech Mono", monospace;
   font-size: 18px;
@@ -46,12 +47,10 @@ body {
   text-transform: uppercase;
 }
 
-/* Flag Section */
 #flags-container {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
   gap: 15px;
-  /* max-width: 1200px; */
   max-width: 90%;
   margin: 0 auto;
 }
@@ -246,7 +245,8 @@ body {
   width: 50px;
   height: 50px;
   border-radius: 4px;
-  border: none;
+  /* border: none; */
+  border: 2px solid transparent;
   margin: 0;
   padding: 0;
   display: flex;
@@ -293,12 +293,13 @@ body {
 
 /* Hover style visual filter btns */
 .filter-btn-vis:hover {
-  filter: brightness(1.2);
-  box-shadow: 0 0 8px rgba(66, 133, 244, 0.4);
+  opacity: 0.8;
 }
 
-.filter-btn-vis:active {
-  transform: scale(0.95);
+.filter-btn-vis.active {
+  border: 2px solid white;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+  transform: scale(1.1);
 }
 
 /* Place holder text color in search-bar */
