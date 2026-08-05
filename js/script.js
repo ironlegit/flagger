@@ -1,3 +1,4 @@
+// ===== Base Vars =====
 // API url construction
 const api_base = "/api"; // proxied
 const api_version = "v5";
@@ -20,7 +21,7 @@ const url = `${api_base}/${api_version}?${searchParams.toString()}`;
 // Filters
 let activeLetter = null;
 
-// Get data
+// ===== Get data from API =====
 let allCountries = [];
 
 fetch(url)
@@ -43,6 +44,7 @@ fetch(url)
   })
   .catch((error) => console.error("Error:", error));
 
+// ===== Render flags =====
 function renderFlags(countries) {
   const container = document.getElementById("flags-container");
   container.innerHTML = "";
@@ -121,7 +123,7 @@ function renderFlags(countries) {
   });
 }
 
-// Search function
+// ===== Keyword Search function =====
 function filterCountries(searchTerm, letter = null) {
   let filteredCountries = allCountries;
 
@@ -152,7 +154,7 @@ function filterCountries(searchTerm, letter = null) {
       // For each country check searchTerms in keywords or common names
       return searchTerms.every(
         (term) =>
-          // Simple fuzzy search
+          // Simple fuzzy search (prefix-based search)
           country.keywords.some((keyword) =>
             keyword.toLowerCase().startsWith(term),
           ) || country.names.common.toLowerCase().startsWith(term),
@@ -170,6 +172,7 @@ searchInput.addEventListener("input", () => {
   renderFlags(filteredData);
 });
 
+// ===== Navigation Options =====
 // Toggle names button
 const toggleNamesButton = document.getElementById("toggle-names");
 if (toggleNamesButton) {
@@ -202,6 +205,20 @@ if (toggleModeButton) {
   });
 }
 
+// ===== Visual filter logic =====
+// Visual filter state
+let activeVisualFilters = {
+  colors: [],
+  stripes: [],
+  shapes: [],
+};
+
+function toggleVisualFilter() {
+  // RESET search bar
+  document.getElementById("search-bar").value = "";
+}
+
+// ===== Wave header =====
 function applyWave(id, amplitude) {
   const el = document.getElementById(id);
   const text = el.getAttribute("data-text");
