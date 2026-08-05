@@ -11,22 +11,25 @@
       <p class="flag-sub">// Flag Explorer</p>
     </div>
 
-    <div class="navigation">
-      <span class="filter-label">Filters</span>
-      <button class="filter-btn" id="toggle-names">Hide Names</button>
-      <button class="filter-btn" id="toggle-mode">Overview Mode</button>
-      <input
-        class="filter-btn"
-        id="search-bar"
-        type="text"
-        id="search"
-        placeholder="Filter by keyword..."
-      />
+    <div class="controls-container">
+      <!-- Search Section -->
+      <div class="search-section">
+        <input
+          class="filter-btn search-bar"
+          id="search-bar"
+          type="text"
+          placeholder="Filter by keyword..."
+        />
+      </div>
+
+      <!-- Nav Opts -->
+      <div class="nav-section">
+        <button class="filter-btn" id="toggle-names">Hide Names</button>
+        <button class="filter-btn" id="toggle-mode">Overview Mode</button>
+      </div>
     </div>
 
     <div class="filters">
-      <span class="filter-label">Visual Filters</span>
-
       <!-- Colors Group -->
       <div class="filter-group">
         <span class="group-label">Colors</span>
