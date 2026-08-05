@@ -94,10 +94,6 @@ function renderFlags(countries) {
         const flagCard = document.createElement("div");
         flagCard.className = "flag-card"; // For styling
 
-        if (country.names.common === "Argentina") {
-          console.log("Argentina Desc:\n" + country.flag.description);
-        }
-
         // Create the flag image
         const img = document.createElement("img");
         if (country.flag.url_png && country.flag.url_png !== "") {
@@ -137,7 +133,7 @@ function filterCountries(searchTerm, letter = null) {
       return firstChar === letter;
     });
   }
-  console.log("active letter: " + letter);
+
   // Apply search term filter
   if (searchTerm) {
     // Prepare and split search terms by comma or space
@@ -226,8 +222,8 @@ function applyWave(id, amplitude) {
   el.innerHTML = text
     .split("")
     .map((ch, i) => {
-      const amp = amplitude * (0.4 + (i / text.length) * 0.6);
-      const delay = i * 0.07;
+      const amp = amplitude * (0.5 + (i / text.length) * 0.6);
+      const delay = i * 0.08;
       const char = ch === " " ? "&nbsp;" : ch;
       return `<span class="wave-char" style="--amp:${amp}px; animation-delay:${delay}s">${char}</span>`;
     })
