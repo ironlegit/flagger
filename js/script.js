@@ -204,19 +204,39 @@ if (toggleModeButton) {
 
 // ===== Visual filter logic =====
 
+const visualFilterMap = {
+  blue: ["blue", "turquoise", "cobalt"],
+  green: ["green", "lime", "olive"],
+  red: ["red", "crimson"],
+  yellow: ["yellow", "gold"],
+  orange: ["orange"],
+  white: ["white"],
+  black: ["black"],
+  // Patterns
+  "stripes-hor": ["horizontal", "bars", "fess"],
+  "stripes-ver": ["vertical", "pales"],
+  // Shapes
+  star: ["star", "stars", "sun"],
+  moon: ["moon", "crescent"],
+  cross: ["cross"],
+  triangle: ["triangle", "chevron"],
+};
+
 let activeVisualFilters = [];
 
 function handleVisualFilterClick(event) {
-  const filterName = event.target.id.replace("toggle-", "");
-  const button = event.target;
+  // Extract the filter key from the button ID (e.g., "toggle-blue" -> "blue")
+  const filterKey = event.currentTarget.id.replace("toggle-", "");
+  console.log(filterKey);
+  const button = event.currentTarget;
 
-  // Toggle the filter
-  if (activeVisualFilters.includes(filterName)) {
-    activeVisualFilters = activeVisualFilters.filter((f) => f !== filterName);
-    button.classList.remove("active"); // Remove active class
+  // Toggle the filter key in activeVisualFilters
+  if (activeVisualFilters.includes(filterKey)) {
+    activeVisualFilters = activeVisualFilters.filter((f) => f !== filterKey);
+    button.classList.remove("active");
   } else {
-    activeVisualFilters.push(filterName);
-    button.classList.add("active"); // Add active class
+    activeVisualFilters.push(filterKey);
+    button.classList.add("active");
   }
 
   // Reset search bar and re-render
@@ -231,12 +251,15 @@ function filterCountriesByVisuals(filters) {
   }
 
   return allCountries.filter((country) => {
-    // Check if the country's description or keywords include ALL active filters
-    return filters.every(
-      (filter) =>
-        country.flag.description.toLowerCase().includes(filter) ||
-        country.keywords.some((keyword) => keyword.includes(filter)),
-    );
+    // Check if ALL active filters have at least one matching keyword
+    return filters.every((filterKey) => {
+      const keywords = visualFilterMap[filterKey];
+      return keywords.some(
+        (keyword) =>
+          country.flag.description.toLowerCase().includes(keyword) ||
+          country.keywords.some((kw) => kw.includes(keyword)),
+      );
+    });
   });
 }
 
