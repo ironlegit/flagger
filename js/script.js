@@ -169,7 +169,8 @@ searchInput.addEventListener("input", () => {
 });
 
 // ===== Navigation Options =====
-// Toggle names button
+
+// Toggle names buttoon
 const toggleNamesButton = document.getElementById("toggle-names");
 if (toggleNamesButton) {
   toggleNamesButton.addEventListener("click", () => {
@@ -202,17 +203,49 @@ if (toggleModeButton) {
 }
 
 // ===== Visual filter logic =====
-// Visual filter state
-let activeVisualFilters = {
-  colors: [],
-  stripes: [],
-  shapes: [],
-};
 
-function toggleVisualFilter() {
-  // RESET search bar
-  document.getElementById("search-bar").value = "";
+let activeVisualFilters = [];
+
+function handleVisualFilterClick(event) {
+  const filterName = event.target.id.replace("toggle-", "");
+  const button = event.target;
+
+  // Toggle the filter
+  if (activeVisualFilters.includes(filterName)) {
+    activeVisualFilters = activeVisualFilters.filter((f) => f !== filterName);
+    button.classList.remove("active"); // Remove active class
+  } else {
+    activeVisualFilters.push(filterName);
+    button.classList.add("active"); // Add active class
+  }
+
+  // Reset search bar and re-render
+  searchBar.value = "";
+  const filteredData = filterCountriesByVisuals(activeVisualFilters);
+  renderFlags(filteredData);
 }
+
+function filterCountriesByVisuals(filters) {
+  if (filters.length === 0) {
+    return allCountries;
+  }
+
+  return allCountries.filter((country) => {
+    // Check if the country's description or keywords include ALL active filters
+    return filters.every(
+      (filter) =>
+        country.flag.description.toLowerCase().includes(filter) ||
+        country.keywords.some((keyword) => keyword.includes(filter)),
+    );
+  });
+}
+
+const searchBar = document.getElementById("search-bar");
+const visualFilterButtons = document.querySelectorAll(".filter-btn-vis");
+
+visualFilterButtons.forEach((button) => {
+  button.addEventListener("click", handleVisualFilterClick);
+});
 
 // ===== Wave header =====
 function applyWave(id, amplitude) {
