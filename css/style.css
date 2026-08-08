@@ -297,7 +297,7 @@ body {
 
 .filter-btn-vis.active {
   border: 2px solid white;
-  box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
   transform: scale(1.1);
 }
 
